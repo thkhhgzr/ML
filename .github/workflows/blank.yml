@@ -46,12 +46,7 @@ jobs:
              key: jarfile
              path: ./AI_api/target/*.jar
       - uses: actions/checkout@v3
-      - run: pwd
-      - run: cd AI_api
-      - run: ls
-      - run: pwd
-      - run: docker build -t server:latest .
-      - run: cd ..
+      - run: docker build -t server:latest ./AI_api
       - run: mkdir out
       - run: docker save -o ./out/serverimage.tar server:latest
       - uses: actions/cache@v3
