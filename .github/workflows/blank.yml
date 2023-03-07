@@ -11,7 +11,7 @@ on:
   workflow_dispatch:
   
 env:
-  SERVER_IP: 10.11.42.228
+  SERVER_IP: 20.93.143.205
   SERVER_USER: bsmch
   SERVER_PASSWORD: Capibara2019!
   
