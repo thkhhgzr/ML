@@ -1,0 +1,47 @@
+stages:
+  - test
+  - build-server
+  - build-docker
+  - deploy
+
+test:
+  image: maven
+  stage: test
+  script:
+    - cd AI_api
+    - mvn clean test
+
+build-server:
+  image: maven
+  stage: build-server
+  script:
+    - cd AI_api
+    - mvn clean package
+  artifacts:
+    paths:
+      - AI_api/target/*.jar
+
+build-docker:
+  image: docker:19.03.8
+  stage: build-docker
+  script:
+    - docker build -t server:latest .
+    - mkdir out
+    - docker save -o ./out/serverimage.tar server:latest
+  artifacts:
+    paths:
+      - ./out/serverimage.tar
+
+deploy:
+  image: bsmch/maven-sshpass
+  stage: deploy
+  script:
+      - apt-get update -y
+      - shopt -s expand_aliases
+      - alias on_server="sshpass -p \"$SERVER_PASSWORD\" ssh -o StrictHostKeyChecking=no $SERVER_USER@$SERVER_IP"
+      - on_server sudo -S <<< $SERVER_PASSWORD docker rm -f server || true
+      - on_server sudo -S <<< $SERVER_PASSWORD docker image rm -f server || true
+      - on_server rm -f /home/$SERVER_USER/serverimage.tar || true
+      - sshpass -p "$SERVER_PASSWORD" scp -o StrictHostKeyChecking=no ./out/serverimage.tar  $SERVER_USER@$SERVER_IP:/home/$SERVER_USER/serverimage.tar
+      - on_server sudo -S <<< $SERVER_PASSWORD docker load -i /home/$SERVER_USER/serverimage.tar
+      - on_server sudo -S <<< $SERVER_PASSWORD docker run -d -p 80:80 --network=ai-net --name server server:latest
