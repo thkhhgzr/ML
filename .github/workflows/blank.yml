@@ -12,10 +12,15 @@ on:
   
 jobs:
   test:
-    runs-on: maven
+    runs-on: ubuntu-latest
     steps:
      - run: cd AI_api
-     - run: mvn clean test
+     - uses: actions/checkout@v3
+     - uses: actions/setup-java@v3
+       with:
+         java-version: '17'
+         distribution: 'temurin'
+         run: mvn clean test
   build-server:
     runs-on: maven
     steps:
