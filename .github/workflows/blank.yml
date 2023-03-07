@@ -12,8 +12,8 @@ on:
   
 env:
   SERVER_IP: 20.93.143.205
-  SERVER_USER: bsmch
-  SERVER_PASSWORD: Capibara2019!
+  SERVER_USER: Karnaf
+  SERVER_PASSWORD: x_Xh3^Z$%KCJ
   
 jobs:
   test:
