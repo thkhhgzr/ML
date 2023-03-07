@@ -77,4 +77,4 @@ jobs:
            on_server rm -f /home/$SERVER_USER/serverimage.tar || true
            sudo sshpass -p "$SERVER_PASSWORD" scp -o StrictHostKeyChecking=no ./out/serverimage.tar  $SERVER_USER@$SERVER_IP:/home/$SERVER_USER/serverimage.tar
            on_server sudo -S <<< $SERVER_PASSWORD docker load -i /home/$SERVER_USER/serverimage.tar
-           on_server sudo -S <<< $SERVER_PASSWORD docker run -d -p 80:80 --network=ai-net --name server server:latest
+           on_server sudo -S <<< $SERVER_PASSWORD docker run -d -p 80:80 --name server server:latest
