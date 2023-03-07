@@ -45,7 +45,7 @@ jobs:
         with:
              key: jarfile
              path: ./AI_api/target/*.jar
-      - run: cd ./AI_api
+      - run: cd ./AI_api/AI_api
       - run: ls
       - run: docker build -t server:latest ./Docker
       - run: mkdir out
