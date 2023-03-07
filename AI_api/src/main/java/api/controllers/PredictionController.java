@@ -16,8 +16,8 @@ public class PredictionController {
   @Autowired private PredictionService predictionService;
 
   @GetMapping("/predict")
-  public HashMap<String, Double> predict(@RequestHeader String token) {
-    if (!Authentication.verifyUser(token)) {
+  public HashMap<String, Double> predict(@RequestHeader String authorize) {
+    if (!Authentication.verifyUser(authorize)) {
       throw new ResponseStatusException(HttpStatus.UNAUTHORIZED);
     }
 

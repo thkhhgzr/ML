@@ -2,6 +2,7 @@ package api.controllers;
 
 import api.Authentication;
 import api.models.Event;
+import api.models.ReceivedEvent;
 import api.services.EventService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -17,13 +18,13 @@ public class EventController {
   @Autowired private EventService eventService;
 
   @PostMapping("/add")
-  public void addEvent(@RequestHeader String token, @RequestBody Event event) {
-    if (!Authentication.verifyUser(token)) {
+  public void addEvent(@RequestHeader String authorize, @RequestBody ReceivedEvent receivedEvent) {
+    if (!Authentication.verifyUser(authorize)) {
       throw new ResponseStatusException(HttpStatus.UNAUTHORIZED);
     }
 
     try {
-      this.eventService.addEvent(event);
+      this.eventService.addEvent(new Event(receivedEvent));
     } catch (Exception exception) {
       throw new ResponseStatusException(HttpStatus.UNPROCESSABLE_ENTITY);
     }
