@@ -45,6 +45,7 @@ jobs:
         with:
              key: jarfile
              path: ./AI_api/target/*.jar
+      - uses: actions/checkout@v3
       - run: pwd
       - run: cd AI_api
       - run: ls
