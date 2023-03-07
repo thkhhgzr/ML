@@ -33,20 +33,34 @@ jobs:
          java-version: '17'
          distribution: 'temurin'
          run: mvn clean package
+     - uses: actions/cache@v3
+       with:
+             key: jarfile
+             path: ./AI_api/target/*.jar
   build-docker:
     needs: build-server
     runs-on: ubuntu-latest
     steps:
+      - uses: actions/cache@v3
+        with:
+             key: jarfile
+             path: ./AI_api/target/*.jar
       - run: docker build -t server:latest .
       - run: mkdir out
       - run: docker save -o ./out/serverimage.tar server:latest
       - uses: actions/cache@v3
+      - uses: actions/cache@v3
         with:
-          path: ~./out/serverimage.tar
+             key: tarfile
+             path: ./out/serverimage.tar
   deploy:
     needs: build-docker
     runs-on: ubuntu-20.04
     steps:
+      - uses: actions/cache@v3
+        with:
+               key: tarfile
+               path: ./out/serverimage.tar
       - run: apt-get update -y
       - run: shopt -s expand_aliases
       - run: alias on_server="sshpass -p \"$SERVER_PASSWORD\" ssh -o StrictHostKeyChecking=no $SERVER_USER@$SERVER_IP"
