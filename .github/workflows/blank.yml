@@ -23,22 +23,32 @@ jobs:
          distribution: 'temurin'
          run: mvn clean test
   build-server:
-    runs-on: maven
+    needs: test
+    runs-on: ubuntu-latest
     steps:
-      - run: cd AI_api
-      - run: mvn clean package
-    outputs:
-       paths: AI_api/target/*.jar
+     - uses: actions/checkout@v3
+     - run: cd ./AI_api
+     - uses: actions/setup-java@v3
+       with:
+         java-version: '17'
+         distribution: 'temurin'
+         run: mvn clean package
+     - uses: actions/cache@v3
+       with:
+          path: ~./AI_api/target/*.jar
   build-docker:
-    runs-on: docker:19.03.8
+    needs: build-server
+    runs-on: ubuntu-latest
     steps:
       - run: docker build -t server:latest .
       - run: mkdir out
       - run: docker save -o ./out/serverimage.tar server:latest
-    outputs:
-      paths: ./out/serverimage.tar
+      - uses: actions/cache@v3
+        with:
+          path: ~./out/serverimage.tar
   deploy:
-    runs-on: bsmch/maven-sshpass
+    needs: build-docker
+    runs-on: ubuntu-20.04
     steps:
       - run: apt-get update -y
       - run: shopt -s expand_aliases
