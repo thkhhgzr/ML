@@ -1,0 +1,45 @@
+# This is a basic workflow to help you get started with Actions
+
+name: CI
+
+on:
+  push:
+    branches: [ "main" ]
+  pull_request:
+    branches: [ "main" ]
+
+  workflow_dispatch:
+  
+jobs:
+  test:
+    runs-on: maven
+    steps:
+     - run: cd AI_api
+     - run: mvn clean test
+  build-server:
+    runs-on: maven
+    steps:
+      - run: cd AI_api
+      - run: mvn clean package
+    outputs:
+       paths: AI_api/target/*.jar
+  build-docker:
+    runs-on: docker:19.03.8
+    steps:
+      - run: docker build -t server:latest .
+      - run: mkdir out
+      - run: docker save -o ./out/serverimage.tar server:latest
+    outputs:
+      paths: ./out/serverimage.tar
+  deploy:
+    runs-on: bsmch/maven-sshpass
+    steps:
+      - run: apt-get update -y
+      - run: shopt -s expand_aliases
+      - run: alias on_server="sshpass -p \"$SERVER_PASSWORD\" ssh -o StrictHostKeyChecking=no $SERVER_USER@$SERVER_IP"
+      - run: on_server sudo -S <<< $SERVER_PASSWORD docker rm -f server || true
+      - run: on_server sudo -S <<< $SERVER_PASSWORD docker image rm -f server || true
+      - run: on_server rm -f /home/$SERVER_USER/serverimage.tar || true
+      - run: sshpass -p "$SERVER_PASSWORD" scp -o StrictHostKeyChecking=no ./out/serverimage.tar  $SERVER_USER@$SERVER_IP:/home/$SERVER_USER/serverimage.tar
+      - run: on_server sudo -S <<< $SERVER_PASSWORD docker load -i /home/$SERVER_USER/serverimage.tar
+      - run: on_server sudo -S <<< $SERVER_PASSWORD docker run -d -p 80:80 --network=ai-net --name server server:latest
