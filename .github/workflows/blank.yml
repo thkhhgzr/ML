@@ -33,9 +33,6 @@ jobs:
          java-version: '17'
          distribution: 'temurin'
          run: mvn clean package
-     - uses: actions/cache@v3
-       with:
-          path: ~./AI_api/target/*.jar
   build-docker:
     needs: build-server
     runs-on: ubuntu-latest
