@@ -7,6 +7,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.server.ResponseStatusException;
 
+import java.io.IOException;
 import java.util.HashMap;
 
 @CrossOrigin
@@ -22,8 +23,13 @@ public class PredictionController {
     }
 
     HashMap<String, Double> allPredictions = new HashMap<>();
-    this.predictionService.allPredictions()
-            .forEach(prediction -> allPredictions.put(prediction.area(), prediction.probability()));
+
+    try {
+      this.predictionService.allPredictions()
+             .forEach(prediction -> allPredictions.put(prediction.area(), prediction.probability()));
+    } catch (IOException exception) {
+      throw new ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR);
+    }
 
     return allPredictions;
   }

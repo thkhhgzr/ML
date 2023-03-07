@@ -12,11 +12,9 @@ import javax.persistence.Table;
 public class Prediction {
   @Id
   @JsonProperty
-  @Column(name = "area")
   private String area;
 
   @JsonProperty
-  @Column(name = "probability")
   private double probability;
 
   public String area() {
@@ -25,5 +23,20 @@ public class Prediction {
 
   public double probability() {
     return this.probability;
+  }
+
+  private void changeArea(String area) {
+    this.area = area;
+  }
+
+  private void changeProbability(double probability) {
+    this.probability = probability;
+  }
+
+  public Prediction() {}
+
+  public Prediction(int area, double probability) {
+    this.changeArea(String.valueOf(area));
+    this.changeProbability(probability);
   }
 }
