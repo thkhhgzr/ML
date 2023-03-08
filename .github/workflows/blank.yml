@@ -1,6 +1,6 @@
 # This is a basic workflow to help you get started with Actions
 
-name: CI
+#name: CI
 
 on:
   push:
@@ -51,30 +51,29 @@ jobs:
              key: jarfile
              path: ./AI_api/target/*.jar
       - uses: actions/checkout@v3
-      - run: docker build -t server:latest ./AI_api
-      - run: mkdir out
-      - run: docker save -o ./out/serverimage.tar server:latest
-      - uses: actions/cache@v3
-        with:
-             key: tarfile
-             path: ./out/serverimage.tar
+      - run: |
+          docker build -t avivhagever/data-serverimage:latest ./AI_api/
+          docker login -u avivhagever -p Tchcvdcr123 
+          docker image ls
+          docker push avivhagever/data-serverimage:latest
   deploy:
-    needs: build-docker
-    runs-on: ubuntu-20.04
-    steps:
-      - uses: actions/checkout@v3
-      - uses: actions/cache@v3
-        with:
-               key: tarfile
-               path: ./out/serverimage.tar
-      - run: | 
-           sudo apt-get update -y
-           sudo apt-get install sshpass -y
-           shopt -s expand_aliases
-           alias on_server="sshpass -p \"$SERVER_PASSWORD\" ssh -o StrictHostKeyChecking=no $SERVER_USER@$SERVER_IP"
-           on_server sudo -S <<< $SERVER_PASSWORD docker rm -f server || true
-           on_server sudo -S <<< $SERVER_PASSWORD docker image rm -f server || true
-           on_server rm -f /home/$SERVER_USER/serverimage.tar || true
-           sudo sshpass -p "$SERVER_PASSWORD" scp -o StrictHostKeyChecking=no ./out/serverimage.tar  $SERVER_USER@$SERVER_IP:/home/$SERVER_USER/serverimage.tar
-           on_server sudo -S <<< $SERVER_PASSWORD docker load -i /home/$SERVER_USER/serverimage.tar
-           on_server sudo -S <<< $SERVER_PASSWORD docker run -d -p 80:80 --name server server:latest
+      needs: build-docker
+      runs-on: ubuntu-20.04
+      steps:
+        - uses: actions/checkout@v3
+        - uses: actions/cache@v3
+          with:
+                 key: tarfile
+                 path: ./out/serverimage.tar
+        - run: | 
+             sudo apt-get update -y
+             sudo apt-get install sshpass -y
+             shopt -s expand_aliases
+             alias on_server="sshpass -p \"$SERVER_PASSWORD\" ssh -o StrictHostKeyChecking=no $SERVER_USER@$SERVER_IP"
+             on_server sudo -S <<< $SERVER_PASSWORD docker rm -f server || true
+             on_server sudo -S <<< $SERVER_PASSWORD docker image rm -f server || true
+             on_server rm -f /home/$SERVER_USER/serverimage.tar || true
+             sudo sshpass -p "$SERVER_PASSWORD" scp -o StrictHostKeyChecking=no ./out/serverimage.tar  $SERVER_USER@$SERVER_IP:/home/$SERVER_USER/serverimage.tar
+             on_server sudo -S <<< $SERVER_PASSWORD docker load -i /home/$SERVER_USER/serverimage.tar
+             on_server sudo -S <<< $SERVER_PASSWORD docker run -d -p 80:80 --name server server:latest
+

@@ -1,0 +1,17 @@
+---
+kind: Service
+apiVersion: v1
+metadata:
+  name: data-service
+  labels:
+    app: data-server
+spec:
+  type: LoadBalancer
+  externalIPs:
+    - 192.168.0.114
+  selector:
+    app: data-server
+  ports:
+    - name: data-server
+      port: 8000
+      nodePort: 30990

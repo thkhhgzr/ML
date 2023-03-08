@@ -1,0 +1,21 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: dataserver-deployment
+  labels:
+    app: data-server
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: web
+  template:
+    metadata:
+      labels:
+        app: web
+    spec:
+      containers:
+      - name: data-app
+        image: avivhagever/data-serverimage
+        ports:
+        - containerPort: 8000
