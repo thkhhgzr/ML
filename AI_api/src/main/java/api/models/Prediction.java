@@ -18,10 +18,12 @@ public class Prediction {
   private double probability;
 
   public String area() {
+    System.out.println(area);
     return this.area;
   }
 
   public double probability() {
+    System.out.println(probability);
     return this.probability;
   }
 
@@ -35,8 +37,8 @@ public class Prediction {
 
   public Prediction() {}
 
-  public Prediction(int area, double probability) {
-    this.changeArea(String.valueOf(area));
+  public Prediction(String area, double probability) {
+    this.changeArea(area);
     this.changeProbability(probability);
   }
 }
