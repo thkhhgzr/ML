@@ -8,7 +8,7 @@ ENV DB_HOST=ai-db
 ENV DB_USER_NAME=postgres
 ENV WORKDIR=/home/bsmch
 
-COPY ./*.jar app.jar
+COPY ./target/*.jar app.jar
 
 EXPOSE ${PORT}
 
