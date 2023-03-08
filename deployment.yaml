@@ -5,17 +5,17 @@ metadata:
   labels:
     app: data-server
 spec:
+  replicas: 1
   selector:
     matchLabels:
       app: web
-  replicas: 1
   template:
     metadata:
       labels:
         app: web
     spec:
       containers:
-       —name: data-app
-          image: avivhagever/data-serverimage
-          ports:
-           —containerPort: 80
+      - name: data-app
+        image: avivhagever/data-serverimage
+        ports:
+        - containerPort: 8000
