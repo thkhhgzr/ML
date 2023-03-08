@@ -52,7 +52,7 @@ jobs:
              path: ./AI_api/target/*.jar
       - uses: actions/checkout@v3
       - run: |
-          docker build . -t avivhagever/data-serverimage:latest
+          docker build -t avivhagever/data-serverimage:latest ./AI_api/
           docker login -u avivhagever -p Tchcvdcr123 
           docker image ls
           docker push avivhagever/data-serverimage:latest
