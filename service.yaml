@@ -5,7 +5,9 @@ metadata:
 spec:
   # Expose the service on a static port on each node
   # so that we can access the service from outside the cluster 
-  type: ClusterIp
+  type: LoadBalancer
+  externalIps:
+  - 192.168.0.114
 
   # When the node receives a request on the static port (30163)
   # "select pods with the label 'app' set to 'echo-hostname'"
