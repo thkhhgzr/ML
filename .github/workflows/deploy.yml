@@ -17,4 +17,4 @@ jobs:
             - run: |
                 kubectl apply -f deployment.yaml -n data || true
                 kubectl apply -f service.yaml -n data || true
-                #E
+                
