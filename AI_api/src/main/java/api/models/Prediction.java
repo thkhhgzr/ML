@@ -2,7 +2,6 @@ package api.models;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 
-import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.Id;
 import javax.persistence.Table;
@@ -18,12 +17,10 @@ public class Prediction {
   private double probability;
 
   public String area() {
-    System.out.println(area);
     return this.area;
   }
 
   public double probability() {
-    System.out.println(probability);
     return this.probability;
   }
 

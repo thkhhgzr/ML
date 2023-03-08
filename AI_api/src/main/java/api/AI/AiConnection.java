@@ -29,8 +29,6 @@ public class AiConnection {
             new BufferedReader(new InputStreamReader(is,
                     StandardCharsets.UTF_8)).lines().collect(Collectors.toList());
 
-    System.out.println(allPredictionsValue);
-    System.out.println(allPredictionsValue.get(month));
     String[] predictionsValue = allPredictionsValue.get(month).split(",");
 
     for (int i = 0; i <= 5; i++) {
