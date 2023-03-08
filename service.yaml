@@ -11,5 +11,7 @@ spec:
   selector:
     app: data-server
   ports:
-    - port: 8000
-    - nodePort: 30990
+    -
+      name: "data-server
+      port: 8000
+      nodePort: 30990
